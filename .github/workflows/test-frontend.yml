@@ -20,26 +20,29 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Cache do binário do Cypress
+      - name: Cache Cypress
         uses: actions/cache@v4
         with:
-          path: /home/runner/.cache/Cypress
+          path: ~/.cache/Cypress
           key: cypress-binary-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Instalar dependências
-        run: npm install
+        run: npm ci
 
       - name: Instalar binário do Cypress
-        run: npx cypress install
+        run: |
+          npx cypress install --force
+          # Garante permissões do binário
+          chmod -R +x ~/.cache/Cypress
 
       - name: Iniciar servidor em background
         run: node backend/server.js &
 
       - name: Aguardar servidor estar pronto
-        run: npx wait-on http://localhost:3000/health --timeout 15000
+        run: npx wait-on http://localhost:3000/health --timeout 30000 --interval 500
 
       - name: Executar testes do Frontend
-        run: npx cypress run --spec "cypress/e2e/frontend.cy.js" --headless
+        run: npx cypress run --spec "cypress/e2e/frontend.cy.js" --headless --browser electron
 
       - name: Upload de screenshots em caso de falha
         if: failure()
