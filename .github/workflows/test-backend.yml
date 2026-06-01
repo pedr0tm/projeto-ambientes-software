@@ -10,6 +10,9 @@ jobs:
     name: Cypress — API Tests
     runs-on: ubuntu-latest
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
       - name: Checkout do repositório
         uses: actions/checkout@v4
@@ -17,24 +20,28 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: 'npm'
 
       - name: Instalar dependências
         run: npm install
 
+      - name: Instalar wait-on
+        run: npm install -g wait-on
+
       - name: Iniciar servidor em background
         run: node backend/server.js &
 
       - name: Aguardar servidor estar pronto
-        run: npx wait-on http://localhost:3000/health --timeout 15000
+        run: wait-on http://localhost:3000/health --timeout 15000
 
       - name: Executar testes da API
         run: npx cypress run --spec "cypress/e2e/api.cy.js" --headless
 
-      - name: Upload de artefatos em caso de falha
+      - name: Upload de screenshots em caso de falha
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots-backend
           path: cypress/screenshots
+          if-no-files-found: ignore
