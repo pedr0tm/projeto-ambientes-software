@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAREFAS — Gerenciador de Tarefas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">◈</span>
+        <span class="logo-text">TAREFAS</span>
+      </div>
+      <div class="stats" id="stats">
+        <span class="stat" id="stat-total"><span class="stat-num" id="count-total">0</span> total</span>
+        <span class="divider">·</span>
+        <span class="stat" id="stat-pending"><span class="stat-num" id="count-pending">0</span> pendentes</span>
+        <span class="divider">·</span>
+        <span class="stat" id="stat-done"><span class="stat-num" id="count-done">0</span> concluídas</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Input area -->
+    <section class="input-section">
+      <div class="input-wrapper">
+        <span class="input-prefix">→</span>
+        <input
+          type="text"
+          id="todo-input"
+          class="todo-input"
+          placeholder="Nova tarefa..."
+          maxlength="200"
+          autocomplete="off"
+          data-testid="todo-input"
+        />
+        <button class="btn-add" id="btn-add" data-testid="btn-add">
+          <span>ADICIONAR</span>
+          <span class="btn-icon">+</span>
+        </button>
+      </div>
+      <div class="char-counter" id="char-counter">0 / 200</div>
+      <div class="error-msg" id="error-msg" role="alert"></div>
+    </section>
+
+    <!-- Filter bar -->
+    <section class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="all" data-testid="filter-all">Todas</button>
+      <button class="filter-btn" data-filter="pending" data-testid="filter-pending">Pendentes</button>
+      <button class="filter-btn" data-filter="done" data-testid="filter-done">Concluídas</button>
+      <button class="btn-clear" id="btn-clear" data-testid="btn-clear">Limpar concluídas</button>
+    </section>
+
+    <!-- Todo list -->
+    <section class="list-section">
+      <ul class="todo-list" id="todo-list" data-testid="todo-list"></ul>
+      <div class="empty-state" id="empty-state" data-testid="empty-state">
+        <span class="empty-icon">◻</span>
+        <p>Nenhuma tarefa aqui.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Edit modal -->
+  <div class="modal-overlay" id="modal-overlay" data-testid="modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-header">
+        <h2 id="modal-title">EDITAR TAREFA</h2>
+        <button class="modal-close" id="modal-close" data-testid="modal-close" aria-label="Fechar">✕</button>
+      </div>
+      <input
+        type="text"
+        id="edit-input"
+        class="edit-input"
+        maxlength="200"
+        data-testid="edit-input"
+      />
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btn-cancel" data-testid="btn-cancel">Cancelar</button>
+        <button class="btn-save" id="btn-save" data-testid="btn-save">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

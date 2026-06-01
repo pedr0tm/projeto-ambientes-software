@@ -1,0 +1,40 @@
+name: Testes Backend (API)
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  test-api:
+    name: Cypress — API Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Iniciar servidor em background
+        run: node backend/server.js &
+
+      - name: Aguardar servidor estar pronto
+        run: npx wait-on http://localhost:3000/health --timeout 15000
+
+      - name: Executar testes da API
+        run: npx cypress run --spec "cypress/e2e/api.cy.js" --headless
+
+      - name: Upload de artefatos em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots-backend
+          path: cypress/screenshots
