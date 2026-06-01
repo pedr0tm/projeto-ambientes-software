@@ -20,11 +20,17 @@ jobs:
           node-version: 20
           cache: 'npm'
 
+      - name: Cache do binário do Cypress
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.cache/Cypress
+          key: cypress-binary-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
       - name: Instalar dependências
         run: npm install
 
-      - name: Corrigir permissão do Cypress
-        run: chmod +x node_modules/.bin/cypress
+      - name: Instalar binário do Cypress
+        run: npx cypress install
 
       - name: Iniciar servidor em background
         run: node backend/server.js &
