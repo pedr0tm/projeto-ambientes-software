@@ -4,7 +4,7 @@
  * Communicates with the Express backend via fetch()
  */
 
-const API_BASE = "/api/todos";
+const API_BASE = "/api/todos"; 
 
 // ─── State ────────────────────────────────────────────────────────────────────
 const state = {
